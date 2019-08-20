@@ -38,7 +38,18 @@ The task is episodic, and in order to solve the environment, your agent must get
 
 Follow the instructions in `Navigation.ipynb` to get started with training your own agent!  
 
-### (Optional) Challenge: Learning from Pixels
+### Training my own agent for `Navigation.ipynb`
+
+I designed a neural network architecture with 3 hidden layers besides input and output layer. The first hidden layer is a linear layer with dimensions (37, 256). The second hidden layer is a fully connected layer with dimensions (256,256). The third hidden layers is again a linear layer with reduced dimensions (256,128) which is then finally fed to an output layer of dimensions (128,4).
+
+For this architecture, I used soft updation of Q-target network with tau=0.01 and UPDATE_EVERY = 20 iterations. Epsilon-greedy policy is chosen here for the exploration-exploitation part of deepRL. Mean Square Loss for a batch size of 64 is used as the loss function for current Q-local network values and expected Q-target network values. Adam Optimizer is then used at every step with learning rate (LR=5e-4) after performing back propagation at every step. The discount factor for episodic rewards (gamma) is set to 0.99. 
+
+Number of training episodes considered are 2500, with eps_start = 1.0, eps_end = 0.01 and eps_decay = 0.9980
+
+After performing hyper-parameter tuning and fixing the hyper-parameters to above mentioned values, the agent is able to solve the environment with an average score of 13.64 over 100 consecutive episodes. The weights of the learnt model are saved under the filename "model.pt" in the same folder.
+
+
+### (Optional) Challenge with Pixel level data
 
 After you have successfully completed the project, if you're looking for an additional challenge, you have come to the right place!  In the project, your agent learned from information such as its velocity, along with ray-based perception of objects around its forward direction.  A more challenging task would be to learn directly from pixels!
 
