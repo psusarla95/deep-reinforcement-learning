@@ -40,14 +40,13 @@ Follow the instructions in `Navigation.ipynb` to get started with training your 
 
 ### Training my own agent for `Navigation.ipynb`
 
-I designed a neural network architecture with 3 hidden layers besides input and output layer. The first hidden layer is a linear layer with dimensions (37, 256). The second hidden layer is a fully connected layer with dimensions (256,256). The third hidden layers is again a linear layer with reduced dimensions (256,128) which is then finally fed to an output layer of dimensions (128,4).
+`model.py` contains the implementation of neural network architecture, designed for this problem.The architecture has 3 hidden layers besides input and output layer. The first hidden layer is a linear layer with dimensions (37, 256). The second hidden layer is a fully connected layer with dimensions (256,256). The third hidden layers is again a linear layer with reduced dimensions (256,128) which is then finally fed to an output layer of dimensions (128,4).
 
-For this architecture, I used soft updation of Q-target network with tau=0.01 and UPDATE_EVERY = 20 iterations. Epsilon-greedy policy is chosen here for the exploration-exploitation part of deepRL. Mean Square Loss for a batch size of 64 is used as the loss function for current Q-local network values and expected Q-target network values. Adam Optimizer is then used at every step with learning rate (LR=5e-4) after performing back propagation at every step. The discount factor for episodic rewards (gamma) is set to 0.99. 
+`dqn_agent.py` contains the implementation of deepRL agent, needed for this problem. The dqn_agent has two classes namely `Agent` and `ReplayBuffer`. `Agent` class holds the information regarding both Q-local network and Q-target networks. It also includes agent functionalities such as `step`, `learn`, `act` and `softupdate`. `Step` functionality helps the agent in performing a step in environment, collect the Experience and store them in a `ReplayBuffer`. `learn` function helps in computing loss values, back propagation and running optimizer of the entire batch of samples considered during training. `softupdate` on the other hand, helps in performing soft updates on Q-target network. `act` function helps in choosing the right action for current state in environment, using epsilon-greedy policy.
 
-Number of training episodes considered are 2500, with eps_start = 1.0, eps_end = 0.01 and eps_decay = 0.9980
+`ReplayBuffer` on the other hand, implements the experience replay part of the problem. The class stores information of latest BUFFER_SIZE transition samples occurred while running an agent in the environment. The class contains `sample`, `add` functionalities. `sample` helps in drawing random BATCH_SIZE samples from the buffer. `add` helps in adding a transition information from the environment into memory buffer.
 
-After performing hyper-parameter tuning and fixing the hyper-parameters to above mentioned values, the agent is able to solve the environment with an average score of 13.64 over 100 consecutive episodes. The weights of the learnt model are saved under the filename "model.pt" in the same folder.
-
+`Navigation.ipynb` contains the instantiation of Banana env and DQN Agent, the training loop of the dqn agent and testing of the envrionment using the smart agent.
 
 ### (Optional) Challenge with Pixel level data
 
