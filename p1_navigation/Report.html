@@ -1,5 +1,0 @@
-To the architecture designed in model.py, soft updates of Q-target network with tau=0.01 and UPDATE_EVERY = 20 iterations. Epsilon-greedy policy is chosen here for the exploration-exploitation partyes of deepRL. Mean Square Loss for a batch size of 64 is used as the loss function for current Q-local network values and expected Q-target network values. Adam Optimizer is then used at every step with learning rate (LR=5e-4) after performing back propagation at every step. The discount factor for episodic rewards (gamma) is set to 0.99. 
-
-Number of training episodes considered are 2500, with eps_start = 1.0, eps_end = 0.01 and eps_decay = 0.9980
-
-After performing hyper-parameter tuning and fixing the hyper-parameters to above mentioned values, the agent is able to solve the environment with an average score of 13.64 over 100 consecutive episodes. The weights of the learnt model are saved under the filename "model.pt" in the same folder.
