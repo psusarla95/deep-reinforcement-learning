@@ -14,7 +14,7 @@ class Actor(nn.Module):
     Actor POlicy Model (mu)
     """
 
-    def __init__(self, state_size, action_size, seed, fc1=400, fc2=300):
+    def __init__(self, state_size, action_size, seed, fc1=256, fc2=128):
         """Initialize parameters and build model.
         Params
         ======
@@ -67,7 +67,7 @@ class Critic(nn.Module):
     Build a Critic Value network
     """
 
-    def __init__(self, state_size, action_size, seed, fcs1_units=400, fc2_units=300):
+    def __init__(self, state_size, action_size, seed, fcs1_units=256, fc2_units=128):
         """Initialize parameters and build model.
             Params
             ======

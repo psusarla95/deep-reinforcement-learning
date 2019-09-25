@@ -8,13 +8,13 @@ import torch
 import torch.optim as optim
 import torch.nn.functional as F
 
-BUFFER_SIZE = int(1e5) #Replay Buffer Size
-BATCH_SIZE = 128 #minibatch size
+BUFFER_SIZE = int(1e6) #Replay Buffer Size
+BATCH_SIZE = 64 #minibatch size
 GAMMA = .99     #discount factor
 TAU = 1e-3      #soft update hyper-parameter
-LR_ACTOR = 1e-4 #Learning rate for Actor network
-LR_CRITIC = 1e-3 #Learning rate for Critic network
-WEIGHT_DECAY = 0 #L2 weight decay
+LR_ACTOR = 5e-4 #Learning rate for Actor network
+LR_CRITIC = 5e-3 #Learning rate for Critic network
+WEIGHT_DECAY = 0.01 #L2 weight decay
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -44,7 +44,7 @@ class Agent():
         #Critic Network (local & target network)
         self.critic_local = Critic(state_size, action_size, seed).to(device)
         self.critic_target = Critic(state_size, action_size, seed).to(device)
-        self.critic_optimizer = optim.Adam(self.critic_local.parameters(), lr=LR_CRITIC)
+        self.critic_optimizer = optim.Adam(self.critic_local.parameters(), lr=LR_CRITIC, weight_decay=WEIGHT_DECAY)
 
         #Noise process
         self.noise = OUNoise(action_size, seed)
@@ -60,7 +60,7 @@ class Agent():
         self.memory.add(state, action , reward, next_state, done)
 
         #Learn, if enough samples are available in memory
-        if len(self.memory) > BUFFER_SIZE:
+        if len(self.memory) > BATCH_SIZE:
             experiences = self.memory.sample()
             self.learn(experiences, GAMMA)
 
@@ -101,7 +101,7 @@ class Agent():
         Q_targets_next = self.critic_target(next_states, actions_next)
 
         #Compute Q targets for current states
-        Q_targets = rewards + gamma*Q_targets_next*(1-dones)
+        Q_targets = rewards + (gamma*Q_targets_next*(1-dones))
 
         #Compute critic loss
         Q_expected = self.critic_local(states, actions)
@@ -140,7 +140,7 @@ class Agent():
 
         for target_param, local_param in zip(target_model.parameters(), local_model.parameters()):
             target_param.data.copy_(tau*local_param.data + (1.0-tau)*target_param.data)
-            
+
 
 class OUNoise:
     """Ornstein-Uhlenbeck process."""
