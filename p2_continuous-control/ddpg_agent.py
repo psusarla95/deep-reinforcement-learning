@@ -12,9 +12,9 @@ BUFFER_SIZE = int(1e6) #Replay Buffer Size
 BATCH_SIZE = 64 #minibatch size
 GAMMA = .99     #discount factor
 TAU = 1e-3      #soft update hyper-parameter
-LR_ACTOR = 5e-4 #Learning rate for Actor network
-LR_CRITIC = 5e-3 #Learning rate for Critic network
-WEIGHT_DECAY = 0.01 #L2 weight decay
+LR_ACTOR = 1e-4 #Learning rate for Actor network
+LR_CRITIC = 1e-3 #Learning rate for Critic network
+WEIGHT_DECAY = 0.0001 #L2 weight decay
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
