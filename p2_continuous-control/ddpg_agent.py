@@ -9,12 +9,12 @@ import torch.optim as optim
 import torch.nn.functional as F
 
 BUFFER_SIZE = int(1e6) #Replay Buffer Size
-BATCH_SIZE = 64 #minibatch size
+BATCH_SIZE = 128 #minibatch size
 GAMMA = .99     #discount factor
 TAU = 1e-3      #soft update hyper-parameter
-LR_ACTOR = 1e-4 #Learning rate for Actor network
-LR_CRITIC = 1e-3 #Learning rate for Critic network
-WEIGHT_DECAY = 0.0001 #L2 weight decay
+LR_ACTOR = 2e-4 #Learning rate for Actor network
+LR_CRITIC = 2e-4 #Learning rate for Critic network
+WEIGHT_DECAY = 0 #L2 weight decay
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -110,6 +110,7 @@ class Agent():
         #minimize the loss
         self.critic_optimizer.zero_grad()
         critic_loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.critic_local.parameters(), 1)  # clip of local gradients of critic
         self.critic_optimizer.step()
 
         #----------------------update actor------------------------#
@@ -145,7 +146,7 @@ class Agent():
 class OUNoise:
     """Ornstein-Uhlenbeck process."""
 
-    def __init__(self, size, seed, mu=0., theta=0.15, sigma=0.2):
+    def __init__(self, size, seed, mu=0., theta=0.15, sigma=0.1):
         """Initialize parameters and noise process."""
         self.mu = mu * np.ones(size)
         self.theta = theta
