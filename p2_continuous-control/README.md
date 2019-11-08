@@ -32,6 +32,18 @@ Note that your project submission need only solve one of the two versions of the
 
 The task is episodic, and in order to solve the environment,  your agent must get an average score of +30 over 100 consecutive episodes.
 
+### Training my own agent for First Version `Continuous_Control.ipynb`
+I used Double Deterministic Policy Gradient (DDPG) algorithm to train my agent for `Continuous_control.ipynb`. `model.py` contains the implementation of neural network architecture, designed for this problem. The architecture has 2 hidden layers besides input and output layer for both actor and critic. The first hidden layer is a linear layer with dimensions (33, 128). The second hidden layer is a fully connected layer with dimensions (128,128) which is then finally fed to an output layer of dimensions (128,4).
+
+`dqn_agent.py` contains the implementation of DDPG agent, needed for this problem. The dqn_agent has three classes namely `Agent` `OUNoise`and `ReplayBuffer`. `Agent` class holds the information regarding Q-local and Q-target networks for both actor and critic. The actor learns the best action for each state in a deterministic manner whereas the critic learns to evaluate the optimal action value function using the actors best believed action. The agent also include functionalities such as `step`, `learn`, `act` and `softupdate`. `Step` functionality helps the agent in performing a step in environment, collect the Experience and store them in a `ReplayBuffer`. `learn` function helps in computing loss values, perform back propagation and running optimizers for both actor and critic using a batch of samples considered at each step during training. `softupdate` on the other hand, helps in performing soft updates on critic and actor's Q-target network. `act` function helps in choosing the right action for current state in environment, using actor's Q-local network. Extra `OUNoise` is also added to the chosen action each time, to perform some exploration using the learning agent.
+
+`ReplayBuffer` on the other hand, implements the experience replay part of the problem. The class stores information of latest BUFFER_SIZE transition samples occurred while running an agent in the environment. The class contains `sample`, `add` functionalities. `sample` helps in drawing random BATCH_SIZE samples from the buffer. `add` helps in adding a transition information from the environment into memory buffer.
+
+`OUNoise` is a Ornstein-Uhlenbeck process used to model the noise using the parameters `theta` and `sigma`.  The process generates the noise correlated with its previous noise, preventing cancelling out or freezing of overall dynamics of the original problem. `OUNoise` class contains `reset` and `sample`functionalities. `reset` is used reseting the noise environment to its internal starting state whenever needed. `sample` helps in modelling the current state noise using `theta`, `sigma` and previous noise state value.
+
+`Continuous_Control.ipynb` contains the instantiation of Reacher env and DDPG Agent and the training loop of the DDPG agent.
+
+
 #### Option 2: Solve the Second Version
 
 The barrier for solving the second version of the environment is slightly different, to take into account the presence of many agents.  In particular, your agents must get an average score of +30 (over 100 consecutive episodes, and over all agents).  Specifically,
@@ -85,4 +97,5 @@ You need only select the environment that matches your operating system:
 Then, place the file in the `p2_continuous-control/` folder in the DRLND GitHub repository, and unzip (or decompress) the file.  Next, open `Crawler.ipynb` and follow the instructions to learn how to use the Python API to control the agent.
 
 (_For AWS_) If you'd like to train the agent on AWS (and have not [enabled a virtual screen](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Training-on-Amazon-Web-Service.md)), then please use [this link](https://s3-us-west-1.amazonaws.com/udacity-drlnd/P2/Crawler/Crawler_Linux_NoVis.zip) to obtain the "headless" version of the environment.  You will **not** be able to watch the agent without enabling a virtual screen, but you will be able to train the agent.  (_To watch the agent, you should follow the instructions to [enable a virtual screen](https://github.com/Unity-Technologies/ml-agents/blob/master/docs/Training-on-Amazon-Web-Service.md), and then download the environment for the **Linux** operating system above._)
+
 
