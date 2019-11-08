@@ -58,10 +58,6 @@ class Actor(nn.Module):
         t = self.fc2(t)
         t = F.relu(t)
 
-        # (3) hidden linear layer
-        #t = self.fc3(t)
-        #t = F.relu(t)
-
         # (3) Output layer
         t = self.fc3(t)
         t = F.tanh(t)
@@ -89,10 +85,8 @@ class Critic(nn.Module):
         self.seed = torch.manual_seed(seed)
 
         self.fcs1 = nn.Linear(in_features=state_size, out_features=fcs1_units)
-        #self.fcs2 = nn.Linear(in_features=fcs1_units, out_features=fcs2_units)
         self.fc2 = nn.Linear(in_features=fcs1_units+action_size, out_features=fc2_units)
         self.fc3 = nn.Linear(in_features=fc2_units,out_features=1)
-        #self.fc4 = nn.Linear(in_features=fc3_units, out_features=1)
 
         self.bn1 = nn.BatchNorm1d(fcs1_units)
         self.reset_parameters()
@@ -100,15 +94,12 @@ class Critic(nn.Module):
     def reset_parameters(self):
         self.fcs1.weight.data.uniform_(*hidden_init(self.fcs1))
         self.fc2.weight.data.uniform_(*hidden_init(self.fc2))
-        #self.fc3.weight.data.uniform_(*hidden_init(self.fc3))
         self.fc3.weight.data.uniform_(-3e-3, 3e-3)
 
     def forward(self, state_tensor, action_tensor):
 
         xs = F.relu(self.fcs1(state_tensor))
         xs = self.bn1(xs)
-        #xs = F.relu(self.fcs2(xs))
         x = torch.cat((xs, action_tensor), dim=1)
         x = F.relu(self.fc2(x))
-        #x = F.relu(self.fc3(x))
         return self.fc3(x)
